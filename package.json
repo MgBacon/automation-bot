@@ -1,0 +1,22 @@
+{
+  "name": "automation-bot",
+  "version": "1.0.0",
+  "description": "This bot is meant to be an automation between actions on discord and Google spreadsheets so we don't have to do it manually. This project is probably not too much of use to you.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MgBacon/automation-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MgBacon/automation-bot/issues"
+  },
+  "homepage": "https://github.com/MgBacon/automation-bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  }
+}
