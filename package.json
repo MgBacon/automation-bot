@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/MgBacon/automation-bot#readme",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "discord.js": "^11.2.1",
+    "dotenv": "^4.0.0",
+    "google-auth-library": "^0.11.0",
+    "googleapis": "^22.2.0"
   }
 }
