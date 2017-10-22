@@ -11,7 +11,9 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
 });
 
-client.on('message', msg => {
+client.on('message', msg => { reply(msg)});
+
+async function reply(msg){
     if(msg.content === '.role'){
         let role = msg.guild.roles.find("name", "Member");
         const ismember = msg.member.roles.has(role.id);
@@ -21,22 +23,22 @@ client.on('message', msg => {
         msg.reply('Pong!');
     }
     if(msg.content === '.addme') {
-        const reply = await(DB.add_user(msg));
+        var reply = await DB.add_user(msg)
         msg.reply(reply);
     }
     if(msg.content.indexOf('addap') >-1){
-        const reply = await(DB.addap(msg));
+        const reply = await DB.addap(msg);
         msg.reply(reply);
     }
     if(msg.content.indexOf('adddp') >-1){
-        const reply = await(DB.adddp(msg));
+        const reply = await DB.adddp(msg);
         msg.reply(reply);
     }
     if(msg.content.indexOf('addchar') >-1){
-        const reply = await(DB.addchar(msg))
+        const reply = await DB.addchar(msg);
         msg.reply(reply);
     }
-});
+}
 
 client.login(process.env.DISCORD_TOKEN);
 
