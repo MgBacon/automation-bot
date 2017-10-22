@@ -21,16 +21,20 @@ client.on('message', msg => {
         msg.reply('Pong!');
     }
     if(msg.content === '.addme') {
-        const messege = DB.add_user(msg);
+        const reply = await(DB.add_user(msg));
+        msg.reply(reply);
     }
     if(msg.content.indexOf('addap') >-1){
-        DB.addap(msg)
+        const reply = await(DB.addap(msg));
+        msg.reply(reply);
     }
     if(msg.content.indexOf('adddp') >-1){
-        DB.adddp(msg)
+        const reply = await(DB.adddp(msg));
+        msg.reply(reply);
     }
     if(msg.content.indexOf('addchar') >-1){
-        DB.addchar(msg)
+        const reply = await(DB.addchar(msg))
+        msg.reply(reply);
     }
 });
 

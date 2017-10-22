@@ -38,14 +38,14 @@ exports.add_user = async function _add_user(msg){
 
     try {
         const res = await pool.query(text, values)
-        msg.reply('successfully added');
+        return 'successfully added';
     } catch(err) {
         console.log(err.stack)
         if(err.code === '23505'){
-            msg.reply('you are already added :eyes:!');
+            return 'you are already added :eyes:!';
         }
     }
-    return msg;
+    return ' ';
 }
 
 exports.addap = async function _add_ap(msg){
@@ -57,12 +57,12 @@ exports.addap = async function _add_ap(msg){
 
     try {
         const res = await pool.query(text, values)
-        msg.reply('successfully added');
+        return 'successfully added';
     } catch(err) {
         console.log(err.stack);
-        msg.reply('you are already added :eyes:!');
+        return 'you are already added :eyes:!';
     }
-    return msg;
+    return ' ';
 }
 
 exports.adddp = async function _add_dp(msg){
@@ -72,11 +72,11 @@ exports.adddp = async function _add_dp(msg){
         var dp_int = parseInt(dp);
 
         const response = await pool.query('UPDATE memberlist SET dp =' + dp_int + ' where user_id = ' + msg.author.id);
-        msg.reply('dp successfully added');
+        return 'dp successfully added';
     }
     catch (e) {
         console.error("add_dp failed", e);
-        msg.reply('something went wrong :eyes:')
+        return 'something went wrong :eyes:';
     }
 }
 
@@ -86,11 +86,11 @@ exports.addchar = async function _add_char(msg){
         var char = (string.split(' '))[1];
 
         const response = await pool.query('UPDATE memberlist SET charactername = ' + char + ' where user_id = ' + msg.author.id);
-        msg.reply('character name successfully added');
+        return 'character name successfully added';
     }
     catch (e) {
         console.error("add_char failed", e);
-        msg.reply('something went wrong :eyes:')
+        return 'something went wrong :eyes:';
     }
 }
 
