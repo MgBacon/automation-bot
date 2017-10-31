@@ -40,4 +40,9 @@ client.on('messageReactionAdd',  (reaction, user) => {
 });
 client.login(process.env.DISCORD_TOKEN);
 
+googleDoc.authenticate()
+.then(text => {
+    googleDoc.readSignups();
+})
+
 module.exports=client;
