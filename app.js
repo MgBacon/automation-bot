@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const DB = require("./Database");
 var idAnouncment = '';
+const googleDoc=require('./gdocs')
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
