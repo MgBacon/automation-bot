@@ -2,24 +2,24 @@ require('dotenv').config();
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const DB = require("./Database");
-var idAnouncment = '';
+var idAnouncement = "365209686703603715" //testchannel;
 const googleDoc=require('./gdocs')
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
-    client.user.setGame("Life is a pain!");
+    client.user.setActivity("Life is a pain!");
 });
 
 client.on('message', msg => { reply(msg)});
 
 client.on('message', msg => {
 
-    if (msg.channel.id === idAnouncment) {
+    if (msg.channel.id === idAnouncement) {
 
-        if( msg.content.indexOf('Nodewar') && /((0[1-9]|1[0-2]).(0[1-9]|[1-2][0-9]|3[0-1]))|((0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]))((0[1/9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]))/.test(msg.content) && msg.content.indexOf('Please sign up') && client.user.id !== msg.author.id) {
+        if( msg.content.indexOf('NodewarSignup')>-1 ) { /**&& client.user.id !== msg.author.id*/
 
             msg.react('✅');
-            msg.react('❓');
+            /*msg.react('❓');*/
             msg.react('❎');
 
             console.log('a new notewar anouncement got detected, emojis added.');
@@ -28,16 +28,30 @@ client.on('message', msg => {
     else {
         if (msg.content === '.setAnouncement') {
             msg.reply("This channel is now the anouncement channel!");
-            idAnouncment = msg.channel.id;
+            idAnouncement = msg.channel.id;
         }
     }
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
-
-    if(user.lastMessage.channel.id === idAnouncment && client.user.id !== user.id){
+    if(user.lastMessage=== null){return;}
+    if(user.lastMessage.channel.id === idAnouncement && client.user.id !== user.id){
 
         reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
+        var member = user.lastMessage.guild.member(user);
+        var nickname = member.nickname;
+        var FamilyName = nickname.split('|')[0];
+        console.log(FamilyName); // FamilyName with condition "Charname | Family name"
+        if(reaction.emoji.name ==='✅'){
+            console.log("Signup with yes to all");
+            googleDoc.authenticate()
+                .then(text => {
+                    googleDoc.Signup(FamilyName);
+                })
+        }
+        else if(reaction.emoji.name === '❎'){
+            console.log("Signup with no to all");
+        }
 }
 
 });

@@ -12,6 +12,7 @@ class Authentication {
   constructor() {
         this.sheetId=process.env.SHEET_ID;
         this.authenthication;
+        this.matrix=[];
   }
   authenticate(){
     return new Promise((resolve, reject)=>{
@@ -87,7 +88,7 @@ class Authentication {
  * Print the names and majors of students in a sample spreadsheet:
  * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  */
-  listMajors() {
+  /**listMajors() {
     var sheets = google.sheets('v4');
     sheets.spreadsheets.values.get({
       auth: this.authenthication,
@@ -110,26 +111,61 @@ class Authentication {
         }
       }
     });
-  }
-  readSignups(){
+  }*/
+  async readSignups(){
     var sheets = google.sheets('v4');
-    sheets.spreadsheets.values.get({
-      auth: this.authenthication,
-      spreadsheetId: this.sheetId,
-      range: 'Nodewar signup!A9:F',    
-    }, function(err, response) {
-      if (err) {
-        console.log('The API returned an error: ' + err);
-        return;
+    var rows = [];
+    await sheets.spreadsheets.values.get({
+          auth: this.authenthication,
+          spreadsheetId: this.sheetId,
+          range: 'Sheet1!A1:A100',
+      }, function(err, response) {
+          if (err) {
+              console.log('The API returned an error: ' + err);
+              return;
+          }
+          rows = response.values;
+          if (rows.length == 0) {
+              console.log('No data found.');
+          } else {
+              console.log('Name, Major:');
+              for (var i = 0; i < rows.length; i++) {
+                  var row = rows[i];
+                  // Print columns A and E, which correspond to indices 0 and 4.
+                  //console.log('%s, %s', row[0], row[4]);
+              }
+          }
+      });
+    this.matrix=rows;
+  }
+  async Signup(FamilyName){
+      await this.readSignups();
+      for (let key in this.matrix){
+          console.log(this.matrix[key]);
+          for(let key2 in this.matrix[key]){
+              console.log(this.matrix[key][key2]);
+          }
+
       }
-      var rows = response.values;
-      if (rows.length == 0) {
-        console.log('No data found.');
-      } else {
-        console.log(rows)
-      }
-    });
-}
+      var sheets = google.sheets('v4');
+      sheets.spreadsheets.values.update({
+          auth: this.authenthication,
+          spreadsheetId: this.sheetId,
+          range: 'Sheet1!A2:C2',
+          valueInputOption: "USER_ENTERED",
+          resource: {
+              values: [ ["YES", "YES", "YES"] ]
+          }
+      }, function(err, response){
+          if (err) {
+              console.log('The API returned an error: ' + err);
+              return;
+          } else {
+              console.log("Appended");
+          }}
+      );
+  }
+
 }
 
 module.exports = new Authentication();
