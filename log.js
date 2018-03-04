@@ -34,5 +34,3 @@ class logJSON {
                 else channels = JSON.stringify([]); //Creates a empty JSON object
             }});
     }
-
-}

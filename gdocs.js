@@ -147,11 +147,11 @@ class Authentication {
             }
             if(NameExists){
                 var sheets = google.sheets('v4');
-                var column = 'A';
-                if(msg_str.indexOf('1')){column = 'F'}
-                if(msg_str.indexOf('2')){column = 'G'}
-                if(msg_str.indexOf('3')){column = 'H'}
-                if(msg_str.indexOf('Event')){column = 'E'}
+                var column = 'I'; //comment collumn
+                if(msg_str.indexOf('1.')>-1){column = 'F'}
+                if(msg_str.indexOf('2.')>-1){column = 'G'}
+                if(msg_str.indexOf('3.')>-1){column = 'H'}
+                if(msg_str.indexOf('Event')>-1){column = 'E'}
                 sheets.spreadsheets.values.update({
                         auth: autheenthication,
                         spreadsheetId: sheeetId,
