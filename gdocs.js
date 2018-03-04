@@ -147,7 +147,7 @@ class Authentication {
             }
             if(NameExists){
                 var sheets = google.sheets('v4');
-                var column = 'A';
+                var column = 'I'; //comment collumn
                 if(msg_str.indexOf('1.')>-1){column = 'F'}
                 if(msg_str.indexOf('2.')>-1){column = 'G'}
                 if(msg_str.indexOf('3.')>-1){column = 'H'}

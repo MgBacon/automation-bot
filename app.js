@@ -16,12 +16,12 @@ client.on('message', msg => {
 
     if (msg.channel.id === idAnouncement) {
 
-        if( msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) { /**&& client.user.id !== msg.author.id*/
+        if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) { /**&& client.user.id !== msg.author.id*/
 
             if(client.user.id === msg.author.id){
-            msg.react('✅');
+            msg.react('✅').then(text=>{msg.react('❎').then(text=>{msg.react('❓')})});
             /*msg.react('❓');*/
-            msg.react('❎');
+            //msg.react('❎');
             //msg.react('1⃣');
             }
 
@@ -39,12 +39,26 @@ client.on('message', msg => {
             idAnouncement = msg.channel.id;
         }
     }
+    if(msg.content.indexOf('.comment')>-1){
+        var member = msg.guild.member(msg.author);
+        var nickname = member.nickname;
+        if(nickname===null){
+            msg.author.sendMessage("Please set a Nickname first!");
+            //reaction.message.channel.send("Please set a Nickname first!");
+            return;
+        }
+        if(nickname.split('|').length === 2){
+            var FamilyName = nickname.split('|')[0].trim();
+            var comment = msg.content.replace(".comment","").trim();
+            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,comment,comment)})
+        }
+    }
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
     if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id){
         var msg = reaction.message;
-        reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
+        //reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
         var member = reaction.message.guild.member(user);
         var nickname = member.nickname;
         if(nickname===null){
@@ -56,12 +70,16 @@ client.on('messageReactionAdd',  (reaction, user) => {
             var FamilyName = nickname.split('|')[0].trim();
             console.log(FamilyName); // FamilyName with condition "Charname | Family name"
             if(reaction.emoji.name ==='✅'){
-                console.log("Signup with yes to all");
+                console.log("Signup with yes");
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
             }
             else if(reaction.emoji.name === '❎'){
-                console.log("Signup with no to all");
+                console.log("Signup with no");
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+            }
+            else if(reaction.emoji.name === '❓'){
+                console.log("Signup with no");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Maybe",msg.content)})
             }
             console.log(reaction.emoji.name.toString())
         }
