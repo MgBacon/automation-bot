@@ -6,31 +6,33 @@ var players;
 class logJSON {
 
     constructor() {
-
         //Checks if channel Json
-        if (fs.existsSync(process.env.PATH_JSON_CHANNELS)) {
-            fs.readFile(process.env.PATH_JSON_CHANNELS, 'utf8', function readFileCallback(err, data){
-                if (err){
-                    console.log(err);
-                } else {
-                    channels = JSON.parse(data); //now it an object
-                }});
-        }
-        else{
-            fs.writeFile(process.env.PATH_JSON_CHANNELS, json, 'utf8', callback);
-        }
+        if (fs.existsSync(process.env.PATH_JSON_CHANNELS)) readJSON(process.env.PATH_JSON_CHANNELS);
+        else createJSON(process.env.PATH_JSON_CHANNELS);
+
         //Checks if player Json exists
-        if (fs.existsSync(process.env.PATH_JSON_PLAYERS)) {
-            fs.readFile(process.env.PATH_JSON_PLAYERS, 'utf8', function readFileCallback(err, data){
-                if (err){
-                    console.log(err);
-                } else {
-                    players = JSON.parse(data); //now it an object
-                }});
-        }
-        else{
-            fs.writeFile(process.env.PATH_JSON_CHANNELS, json, 'utf8', callback);
-        }
+        if (fs.existsSync(process.env.PATH_JSON_PLAYERS)) readJSON(process.env.PATH_JSON_PLAYERS);
+        else createJSON(process.env.PATH_JSON_PLAYERS);
     }
-    
+
+    readJSON(file) {
+        fs.readFile(file, 'utf8', function readFileCallback(err, data){
+            if (err){
+                console.log(err);
+            } else {
+                if(file.toLowerCase().indexOf(channel) > -1) channels =JSON.parse(data); //now it an object
+                else players = JSON.parse(data); //now it an object
+            }});
+    }
+
+    createJSON(file) {
+        fs.writeFile(writeFile, json, 'utf8', function writeFileCallback(err){
+            if (err){
+                console.log(err);
+            } else {
+                if(file.toLowerCase().indexOf(channel) > -1) players = JSON.stringify([]); //Creates a empty JSON object
+                else channels = JSON.stringify([]); //Creates a empty JSON object
+            }});
+    }
+
 }
