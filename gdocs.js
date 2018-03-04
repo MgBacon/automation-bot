@@ -118,12 +118,12 @@ class Authentication {
     });
   }*/
 
-  async Signup(FamilyName,value){
+  async Signup(FamilyName,value,msg_str){
     var sheets = google.sheets('v4');
     sheets.spreadsheets.values.get({
           auth: autheenthication,
           spreadsheetId: sheeetId,
-          range: 'Sheet1!A1:A100',
+          range: 'Sheet1!C1:C110',
       }, function(err, response) {
         if (err) {
             console.log('The API returned an error: ' + err);
@@ -147,13 +147,18 @@ class Authentication {
             }
             if(NameExists){
                 var sheets = google.sheets('v4');
+                var column = 'A';
+                if(msg_str.indexOf('1')){column = 'F'}
+                if(msg_str.indexOf('2')){column = 'G'}
+                if(msg_str.indexOf('3')){column = 'H'}
+                if(msg_str.indexOf('Event')){column = 'E'}
                 sheets.spreadsheets.values.update({
                         auth: autheenthication,
                         spreadsheetId: sheeetId,
-                        range: 'Sheet1!B'+rownumber+':D'+rownumber,
+                        range: 'Sheet1!'+column+rownumber,
                         valueInputOption: "USER_ENTERED",
                         resource: {
-                            values: [ [value, value, value] ]
+                            values: [ [value] ]
                         }
                     }, function(err, response){
                         if (err) {
