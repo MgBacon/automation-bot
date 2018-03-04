@@ -40,27 +40,25 @@ client.on('messageReactionAdd',  (reaction, user) => {
         reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
         var member = user.lastMessage.guild.member(user);
         var nickname = member.nickname;
-        var FamilyName = nickname.split('|')[0];
+        var FamilyName = nickname.split('|')[0].trim();
         console.log(FamilyName); // FamilyName with condition "Charname | Family name"
         if(reaction.emoji.name ==='✅'){
             console.log("Signup with yes to all");
-            googleDoc.authenticate()
-                .then(text => {
-                    googleDoc.Signup(FamilyName);
-                })
+            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"YES")})
         }
         else if(reaction.emoji.name === '❎'){
             console.log("Signup with no to all");
+            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"NO")})
         }
 }
 
 });
 client.login(process.env.DISCORD_TOKEN);
 
-googleDoc.authenticate()
+/**googleDoc.authenticate()
 .then(text => {
     googleDoc.readSignups();
-})
+})*/
 
 async function reply(msg){
     if(msg.content === '.role'){

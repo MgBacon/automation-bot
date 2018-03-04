@@ -8,11 +8,15 @@ let SCOPES = ['https://www.googleapis.com/auth/spreadsheets']; //you can add mor
 const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) + '/.credentials/'; //the directory where we're going to save the token
 const TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json'; //the file which will contain the token
 
+var sheeetId;
+var autheenthication;
+
 class Authentication {
   constructor() {
         this.sheetId=process.env.SHEET_ID;
+        sheeetId = this.sheetId;
         this.authenthication;
-        this.matrix=[];
+        autheenthication = this.authenthication;
   }
   authenticate(){
     return new Promise((resolve, reject)=>{
@@ -42,7 +46,8 @@ class Authentication {
           });
         } else {
           oauth2Client.credentials = JSON.parse(token);
-          this.authenthication=oauth2Client;      
+          this.authenthication=oauth2Client;
+          autheenthication=oauth2Client;
           resolve(oauth2Client);
         }
       });
@@ -112,58 +117,55 @@ class Authentication {
       }
     });
   }*/
-  async readSignups(){
+
+  async Signup(FamilyName,value){
     var sheets = google.sheets('v4');
-    var rows = [];
-    await sheets.spreadsheets.values.get({
-          auth: this.authenthication,
-          spreadsheetId: this.sheetId,
+    sheets.spreadsheets.values.get({
+          auth: autheenthication,
+          spreadsheetId: sheeetId,
           range: 'Sheet1!A1:A100',
       }, function(err, response) {
-          if (err) {
-              console.log('The API returned an error: ' + err);
-              return;
-          }
-          rows = response.values;
-          if (rows.length == 0) {
-              console.log('No data found.');
-          } else {
-              console.log('Name, Major:');
-              for (var i = 0; i < rows.length; i++) {
-                  var row = rows[i];
-                  // Print columns A and E, which correspond to indices 0 and 4.
-                  //console.log('%s, %s', row[0], row[4]);
-              }
-          }
-      });
-    this.matrix=rows;
-  }
-  async Signup(FamilyName){
-      await this.readSignups();
-      for (let key in this.matrix){
-          console.log(this.matrix[key]);
-          for(let key2 in this.matrix[key]){
-              console.log(this.matrix[key][key2]);
-          }
-
-      }
-      var sheets = google.sheets('v4');
-      sheets.spreadsheets.values.update({
-          auth: this.authenthication,
-          spreadsheetId: this.sheetId,
-          range: 'Sheet1!A2:C2',
-          valueInputOption: "USER_ENTERED",
-          resource: {
-              values: [ ["YES", "YES", "YES"] ]
-          }
-      }, function(err, response){
-          if (err) {
-              console.log('The API returned an error: ' + err);
-              return;
-          } else {
-              console.log("Appended");
-          }}
-      );
+        if (err) {
+            console.log('The API returned an error: ' + err);
+            return;
+        }
+        var Matrix = response.values;
+        if (Matrix.length === 0) {
+            console.log('No data found.');
+        }
+        else{
+            var NameExists = false
+            var rownumber = 0;
+            for (var i = 0; i < Matrix.length; i++) {
+                var row = Matrix[i];
+                if(row[0]===FamilyName){
+                    NameExists = true;
+                    rownumber = i+1;
+                    break;
+                }
+                console.log('%s', row[0]);
+            }
+            if(NameExists){
+                var sheets = google.sheets('v4');
+                sheets.spreadsheets.values.update({
+                        auth: autheenthication,
+                        spreadsheetId: sheeetId,
+                        range: 'Sheet1!B'+rownumber+':D'+rownumber,
+                        valueInputOption: "USER_ENTERED",
+                        resource: {
+                            values: [ [value, value, value] ]
+                        }
+                    }, function(err, response){
+                        if (err) {
+                            console.log('The API returned an error: ' + err);
+                            return;
+                        } else {
+                            console.log("Appended");
+                        }}
+                );
+            }
+        }
+    });
   }
 
 }
