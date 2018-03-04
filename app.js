@@ -42,23 +42,32 @@ client.on('message', msg => {
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
-    if(user.lastMessage=== null){return;}
-    if(user.lastMessage.channel.id === idAnouncement && client.user.id !== user.id){
-        var msg = user.lastMessage;
+    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id){
+        var msg = reaction.message;
         reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
-        var member = user.lastMessage.guild.member(user);
+        var member = reaction.message.guild.member(user);
         var nickname = member.nickname;
-        var FamilyName = nickname.split('|')[0].trim();
-        console.log(FamilyName); // FamilyName with condition "Charname | Family name"
-        if(reaction.emoji.name ==='✅'){
-            console.log("Signup with yes to all");
-            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
+        if(nickname===null){
+            user.sendMessage("Please set a Nickname first!");
+            //reaction.message.channel.send("Please set a Nickname first!");
+            return;
         }
-        else if(reaction.emoji.name === '❎'){
-            console.log("Signup with no to all");
-            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+        if(nickname.split('|').length === 2){
+            var FamilyName = nickname.split('|')[0].trim();
+            console.log(FamilyName); // FamilyName with condition "Charname | Family name"
+            if(reaction.emoji.name ==='✅'){
+                console.log("Signup with yes to all");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
+            }
+            else if(reaction.emoji.name === '❎'){
+                console.log("Signup with no to all");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+            }
+            console.log(reaction.emoji.name.toString())
         }
-        console.log(reaction.emoji.name.toString())
+        else{
+            user.send("Nickname not in the right format!");
+        }
 }
 
 });
