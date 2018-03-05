@@ -3,11 +3,12 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const DB = require("./Database");
 var idAnouncement = "365209686703603715" //testchannel;
-const googleDoc=require('./gdocs');
+const googleDoc = require('./gdocs');
 const log = require('./log');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
+    log.constructor;
     client.user.setActivity("Life is a pain!");
 });
 
@@ -17,12 +18,12 @@ client.on('message', msg => {
 
     if (msg.channel.id === idAnouncement) {
 
-        if( msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) { /**&& client.user.id !== msg.author.id*/
+        if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) { /**&& client.user.id !== msg.author.id*/
 
             if(client.user.id === msg.author.id){
-            msg.react('✅');
+            msg.react('✅').then(text=>{msg.react('❎').then(text=>{msg.react('❓')})});
             /*msg.react('❓');*/
-            msg.react('❎');
+            //msg.react('❎');
             //msg.react('1⃣');
             }
 
@@ -40,26 +41,53 @@ client.on('message', msg => {
             idAnouncement = msg.channel.id;
         }
     }
+    if(msg.content.indexOf('.comment')>-1){
+        var member = msg.guild.member(msg.author);
+        var nickname = member.nickname;
+        if(nickname===null){
+            msg.author.sendMessage("Please set a Nickname first!");
+            //reaction.message.channel.send("Please set a Nickname first!");
+            return;
+        }
+        if(nickname.split('|').length === 2){
+            var FamilyName = nickname.split('|')[0].trim();
+            var comment = msg.content.replace(".comment","").trim();
+            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,comment,comment)})
+        }
+    }
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
-    if(user.lastMessage=== null){return;}
-    if(user.lastMessage.channel.id === idAnouncement && client.user.id !== user.id){
-        var msg = user.lastMessage;
-        reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
-        var member = user.lastMessage.guild.member(user);
+    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id){
+        var msg = reaction.message;
+        //reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
+        var member = reaction.message.guild.member(user);
         var nickname = member.nickname;
-        var FamilyName = nickname.split('|')[0].trim();
-        console.log(FamilyName); // FamilyName with condition "Charname | Family name"
-        if(reaction.emoji.name ==='✅'){
-            console.log("Signup with yes to all");
-            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
+        if(nickname===null){
+            user.sendMessage("Please set a Nickname first!");
+            //reaction.message.channel.send("Please set a Nickname first!");
+            return;
         }
-        else if(reaction.emoji.name === '❎'){
-            console.log("Signup with no to all");
-            googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+        if(nickname.split('|').length === 2){
+            var FamilyName = nickname.split('|')[0].trim();
+            console.log(FamilyName); // FamilyName with condition "Charname | Family name"
+            if(reaction.emoji.name ==='✅'){
+                console.log("Signup with yes");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
+            }
+            else if(reaction.emoji.name === '❎'){
+                console.log("Signup with no");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+            }
+            else if(reaction.emoji.name === '❓'){
+                console.log("Signup with no");
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Maybe",msg.content)})
+            }
+            console.log(reaction.emoji.name.toString())
         }
-        console.log(reaction.emoji.name.toString())
+        else{
+            user.send("Nickname not in the right format!");
+        }
 }
 
 });
