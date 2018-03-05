@@ -26,6 +26,7 @@ class logJSON {
         });
     }
 
+    //creates json file if not exists. returns a empty json object when finished
     createJSON(file) {
         fs.writeFile(file, JSON.stringify([]), 'utf8', function writeFileCallback(err) {
             if (err) {
@@ -34,6 +35,14 @@ class logJSON {
                 if (file.toLowerCase().indexOf('channel') > -1) players = JSON.stringify([]); //Creates a empty JSON object
                 else channels = JSON.stringify([]); //Creates a empty JSON object
             }
+        });
+    }
+
+    //writes new json to the file, also reread the new json
+    writeJSON(file, data) {
+        fs.writeFile(file, JSON.stringify(data), 'utf8', function writeFileCallback(err) {
+            if (err) console.log(err);
+            else readJSON(file);
         });
     }
 }
