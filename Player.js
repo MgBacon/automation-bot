@@ -1,3 +1,5 @@
+var _ = require("lodash");
+
 
 var Player = function (data) {
     this.data = this.sanitize(data);
@@ -6,36 +8,25 @@ var Player = function (data) {
 Player.prototype.data = {};
 
 //Sets the CharName property
-Player.prototype.changeCharName = function (name) {
-    this.data.Charname = name;
+
+Player.prototype.getCharName = function () {
+    return this.data.Charname;
 };
 
-Player.prototype.getCharName = function (name) {
-    return this.data[name];
-};
-
-Player.prototype.setCharName = function (name, value) {
-    this.data[name] = value;
+Player.prototype.setCharName = function (value) {
+    this.data.Charname = value;
 };
 
 //Sets the fameName
-Player.prototype.changeFamName = function (name) {
-    this.data.Famname = name;
+Player.prototype.getFamName = function () {
+    return this.data.Famname;
 };
 
-Player.prototype.getFamName = function (name) {
-    return this.data[name];
-};
-
-Player.prototype.setFamName = function (name, value) {
-    this.data[name] = value;
+Player.prototype.setFamName = function (value) {
+    this.data.Famname = value;
 };
 
 //Sets The SingupDay
-Player.prototype.changeSingup = function (date) {
-    this.data.Singup = date;
-};
-
 Player.prototype.getSignup = function (date) {
     return this.data[date];
 };
@@ -43,5 +34,11 @@ Player.prototype.getSignup = function (date) {
 Player.prototype.setSingup = function (date, value) {
     this.data[date] = value;
 };
+
+User.prototype.sanitize = function (data) {
+    data = data || {};
+    schema = schemas.user;
+    return _.pick(_.defaults(data, schema), _.keys(schema));
+}
 
 module.exports = new Player;
