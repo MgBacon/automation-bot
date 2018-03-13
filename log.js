@@ -1,5 +1,6 @@
 var fs = require('fs');
 require('dotenv').config();
+const player = require('./Player');
 var channels;
 var players;
 
@@ -21,7 +22,7 @@ class logJSON {
                 console.log(err);
             } else {
                 if (file.toLowerCase().indexOf('channel') > -1) channels = JSON.parse(data); //now it an object
-                else players = JSON.parse(data); //now it an object
+                else players = playerBuilder(JSON.parse(data)); //now it an object
             }
         });
     }
@@ -44,6 +45,20 @@ class logJSON {
             if (err) console.log(err);
             else readJSON(file);
         });
+    }
+
+    //Builds the player object and adds it to the players array
+    playerBuilder(arr) {
+        var player;
+        for (var i = 0, len = arr.length; i < len; i++) {
+            player = new Player;
+            player.setCharName(arr[i].Charname);
+            player.setFamName(arr[i].fam);
+            arr[i].forEach(function (dates) {
+                player.setSingup(dates.date, date.value);
+            });
+            players[arr.keys()[i]] = player;
+        }
     }
 }
 

@@ -9,7 +9,7 @@ const log = require('./log');
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
     log.constructor;
-    client.user.setActivity("Life is a pain!");
+    client.user.setActivity(process.env.ACTIVITYs);
 });
 
 client.on('message', msg => { reply(msg)});
