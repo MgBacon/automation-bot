@@ -1,8 +1,8 @@
 var fs = require('fs');
 require('dotenv').config();
-const player = require('./Player');
-var channels;
-var players;
+Player = require('./Player/player');
+var channels = {};
+var players = {};
 
 class logJSON {
 
@@ -16,13 +16,26 @@ class logJSON {
         else this.createJSON(process.env.PATH_JSON_PLAYERS);
     }
 
+    //Builds the player object and adds it to the players array
+    playerBuilder(arr) {
+        for (var i = 0, len = arr.length; i < len; i++) {
+            var player = new player;
+            player.setCharName(arr[i].Charname);
+            player.setFamName(arr[i].fam);
+            arr[i].forEach(function (dates) {
+                player.setSingup(dates.date, date.value);
+            });
+            players[arr.keys()[i]] = player;
+        }
+    }
+
     readJSON(file) {
         fs.readFile(file, 'utf8', function readFileCallback(err, data) {
             if (err) {
                 console.log(err);
             } else {
                 if (file.toLowerCase().indexOf('channel') > -1) channels = JSON.parse(data); //now it an object
-                else players = playerBuilder(JSON.parse(data)); //now it an object
+                else players = module.exports.playerBuilder(JSON.parse(data)); //now it an object
             }
         });
     }
@@ -43,21 +56,22 @@ class logJSON {
     writeJSON(file, data) {
         fs.writeFile(file, JSON.stringify(data), 'utf8', function writeFileCallback(err) {
             if (err) console.log(err);
-            else readJSON(file);
+            else module.exports.readJSON(file);
         });
     }
 
-    //Builds the player object and adds it to the players array
-    playerBuilder(arr) {
-        var player;
-        for (var i = 0, len = arr.length; i < len; i++) {
-            player = new Player;
-            player.setCharName(arr[i].Charname);
-            player.setFamName(arr[i].fam);
-            arr[i].forEach(function (dates) {
-                player.setSingup(dates.date, date.value);
-            });
-            players[arr.keys()[i]] = player;
+    //Returns the wanted player object based on ID
+    getPlayer(discordid) {
+        module.exports.readJSON(process.env.PATH_JSON_CHANNELS);
+        if (!players) {
+            Player.setFamName('test');
+            console.log(Player);
+            return new Player();
+        }
+        else {
+            for (var player1 in players) {
+                if (player1.getDiscordID === discordID) return player1;
+            }
         }
     }
 }

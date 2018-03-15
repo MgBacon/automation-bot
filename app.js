@@ -9,10 +9,10 @@ const log = require('./log');
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
     log.constructor;
-    client.user.setActivity(process.env.ACTIVITYs);
+    client.user.setActivity(process.env.ACTIVITY);
 });
 
-client.on('message', msg => { reply(msg)});
+//client.on('message', msg => { reply(msg)});
 
 client.on('message', msg => {
 
@@ -41,6 +41,7 @@ client.on('message', msg => {
             idAnouncement = msg.channel.id;
         }
     }
+
     if(msg.content.indexOf('.comment')>-1){
         var member = msg.guild.member(msg.author);
         var nickname = member.nickname;
@@ -54,6 +55,10 @@ client.on('message', msg => {
             var comment = msg.content.replace(".comment","").trim();
             googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,comment,comment)})
         }
+    }
+
+    if(msg.content.indexOf('.addChar')>-1) {
+        console.log(log.getPlayer(msg.author.id));
     }
 });
 
@@ -98,7 +103,7 @@ client.login(process.env.DISCORD_TOKEN);
     googleDoc.readSignups();
 })*/
 
-async function reply(msg){
+/*async function reply(msg){
     if(msg.content === '.role'){
         let role = msg.guild.roles.find("name", "Member");
         const ismember = msg.member.roles.has(role.id);
@@ -123,7 +128,7 @@ async function reply(msg){
         const reply = await DB.addchar(msg);
         msg.reply(reply);
     }
-}
+}*/
 
 module.exports=client;
 
