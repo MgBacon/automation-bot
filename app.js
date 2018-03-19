@@ -18,13 +18,11 @@ client.on('message', msg => {
 
     if (msg.channel.id === idAnouncement) {
 
-        if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) { /**&& client.user.id !== msg.author.id*/
+        if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) {
 
             if(client.user.id === msg.author.id){
             msg.react('✅').then(text=>{msg.react('❎').then(text=>{msg.react('❓')})});
-            /*msg.react('❓');*/
-            //msg.react('❎');
-            //msg.react('1⃣');
+
             }
 
             console.log('a new notewar anouncement got detected, emojis added.');
@@ -63,14 +61,12 @@ client.on('message', msg => {
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
-    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id){
+    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
         var msg = reaction.message;
-        //reaction.message.channel.send(user.username+" just reacted: "+reaction.emoji.name);
         var member = reaction.message.guild.member(user);
         var nickname = member.nickname;
         if(nickname===null){
             user.sendMessage("Please set a Nickname first!");
-            //reaction.message.channel.send("Please set a Nickname first!");
             return;
         }
         if(nickname.split('|').length === 2){
@@ -98,65 +94,4 @@ client.on('messageReactionAdd',  (reaction, user) => {
 });
 client.login(process.env.DISCORD_TOKEN);
 
-/**googleDoc.authenticate()
-.then(text => {
-    googleDoc.readSignups();
-})*/
-
-/*async function reply(msg){
-    if(msg.content === '.role'){
-        let role = msg.guild.roles.find("name", "Member");
-        const ismember = msg.member.roles.has(role.id);
-        msg.reply(ismember);
-    }
-    if (msg.content === 'ping') {
-        msg.reply('Pong!');
-    }
-    if(msg.content === '.addme') {
-        var reply = await DB.add_user(msg)
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('addap') >-1){
-        const reply = await DB.addap(msg);
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('adddp') >-1){
-        const reply = await DB.adddp(msg);
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('addchar') >-1) {
-        const reply = await DB.addchar(msg);
-        msg.reply(reply);
-    }
-}*/
-
 module.exports=client;
-
-/**
- * async function reply(msg){
-    if(msg.content === '.role'){
-        let role = msg.guild.roles.find("name", "Member");
-        const ismember = msg.member.roles.has(role.id);
-        msg.reply(ismember);
-    }
-    if (msg.content === 'ping') {
-        msg.reply('Pong!');
-    }
-    if(msg.content === '.addme') {
-        var reply = await DB.add_user(msg)
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('addap') >-1){
-        const reply = await DB.addap(msg);
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('adddp') >-1){
-        const reply = await DB.adddp(msg);
-        msg.reply(reply);
-    }
-    if(msg.content.indexOf('addchar') >-1){
-        const reply = await DB.addchar(msg);
-        msg.reply(reply);
-    }
-}
- */
