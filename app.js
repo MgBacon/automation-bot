@@ -64,14 +64,13 @@ client.on('messageReactionAdd',  (reaction, user) => {
     if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
         var msg = reaction.message;
         var member = reaction.message.guild.member(user);
-        var nickname = member.nickname;
-        if(nickname===null){
-            user.sendMessage("Please set a Nickname first!");
-            return;
+        var name = member.nickname;
+        if(name===null){
+            name = member.user.username;
         }
-        if(nickname.split('|').length === 2){
-            var FamilyName = nickname.split('|')[0].trim();
-            console.log(FamilyName); // FamilyName with condition "Charname | Family name"
+        if(name.split('|').length === 2){
+            var FamilyName = name.split('|')[0].trim();
+            console.log(FamilyName); // FamilyName with condition "Family name | Charname "
             if(reaction.emoji.name ==='✅'){
                 console.log("Signup with yes");
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
@@ -87,7 +86,8 @@ client.on('messageReactionAdd',  (reaction, user) => {
             console.log(reaction.emoji.name.toString())
         }
         else{
-            user.send("Nickname not in the right format!");
+            if(name === member.nickname) user.send("Nickname not in the right format!");
+            else user.send("Your name doesn't comply with the format please add a nickname or change your username");
         }
 }
 
