@@ -2,7 +2,7 @@ require('dotenv').config();
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const DB = require("./Database");
-var idAnouncement = "365209686703603715" //testchannel;
+var idAnouncement = process.env.ID_ANOUNCMENT //testchannel;
 const googleDoc = require('./gdocs');
 const log = require('./log');
 
@@ -10,6 +10,7 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.username}!`);
     log.constructor;
     client.user.setActivity(process.env.ACTIVITY);
+    client.channels.get(idAnouncement).fetchMessages({limit : process.env.LIMIT});
 });
 
 //client.on('message', msg => { reply(msg)});
