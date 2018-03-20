@@ -66,17 +66,11 @@ class logJSON {
     //writes new json to the file, also reread the new json
     writeJSON(file, data) {
         if (data){
-            module.exports.readJSON(file)
-            console.log(data);
+            module.exports.readJSON(file);
             var ID = data.getID();
-            console.log(players);
             if (data.constructor.name === 'Player') {
-                console.log(players);
                 players[ID] = data;
                 data = players;
-                console.log(players);
-                console.log('=====');
-                console.log(data);
             }
             else{
                 channels[ID] = data;
