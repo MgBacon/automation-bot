@@ -1,19 +1,15 @@
 require('dotenv').config();
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const DB = require("./Database");
-var idAnouncement = process.env.ID_ANOUNCMENT //testchannel;
+var idAnouncement = process.env.ID_ANOUNCMENT; //testchannel;
 const googleDoc = require('./gdocs');
 const log = require('./log');
 
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.username}!`);
-    log.constructor;
+    console.log(`Logged in as ${client.user.username}!`);;
     client.user.setActivity(process.env.ACTIVITY);
     client.channels.get(idAnouncement).fetchMessages({limit : process.env.LIMIT});
 });
-
-//client.on('message', msg => { reply(msg)});
 
 client.on('message', msg => {
 
@@ -57,7 +53,11 @@ client.on('message', msg => {
     }
 
     if(msg.content.indexOf('.addChar')>-1) {
-        console.log(log.getPlayer(msg.author.id));
+        log.writeJSON(process.env.PATH_JSON_PLAYERS,log.getPlayer(msg))
+    }
+
+    if(msg.content.indexOf('.reload')>-1 && msg.message.guild.member(msg.author.id).permissions.FLAGS.ADMINISTRATOR){
+        Dotenv.overload(".env")
     }
 });
 
@@ -81,7 +81,7 @@ client.on('messageReactionAdd',  (reaction, user) => {
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
             }
             else if(reaction.emoji.name === '❓'){
-                console.log("Signup with no");
+                console.log("Signup with maybe");
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Maybe",msg.content)})
             }
             console.log(reaction.emoji.name.toString())

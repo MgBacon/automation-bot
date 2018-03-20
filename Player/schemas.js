@@ -1,6 +1,6 @@
 var schemas = {
     player: {
-        discordID: null,
+        ID: null,
         Charname: null,
         Famname: null,
         date: []

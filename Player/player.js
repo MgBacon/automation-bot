@@ -1,3 +1,4 @@
+require('dotenv').config();
 var _ = require("lodash");
 var schemas = require("./schemas");
 
@@ -7,6 +8,16 @@ var Player = function (data) {
 };
 
 Player.prototype.data = {};
+
+//Sets the ID property
+
+Player.prototype.getID = function () {
+    return this.data.ID;
+};
+
+Player.prototype.setID = function (value) {
+    this.data.ID = value;
+};
 
 //Sets the CharName property
 
