@@ -19,14 +19,18 @@ class logJSON {
 
     //Builds the player object and adds it to the players array
     playerBuilder(arr) {
-        for (var i = 0, len = arr.length; i < len; i++) {
+        for (var i = 0, len = Object.values(arr).length; i < len; i++) {
+            var data = Object.values(arr)[i].data;
             var player = new PlayerClass.constructor;
-            player.setCharName(arr[i].Charname);
-            player.setFamName(arr[i].fam);
-            arr[i].forEach(function (dates) {
-                player.setSingup(dates.date, date.value);
+
+            player.setID(data.ID.trim());
+            player.setCharName(data.Charname.trim());
+            player.setFamName(data.Famname.trim());
+
+            Array.prototype.forEach.call(data.date, date => {
+                player.setSingup(date.date, date.value);
             });
-            players[arr.keys()[i]] = player;
+            players[player.getID()] = player;
         }
     }
 
@@ -36,11 +40,11 @@ class logJSON {
                 console.log(err);
             } else {
                 if (file.toLowerCase().indexOf('channel') > -1){
-                    if(data) channels = {};
+                    if(!data) channels = {};
                     else channels = JSON.parse(data);
                 } //now it an object
                 else {
-                    if(data) players = {};
+                    if(!data) players = {};
                     else players = module.exports.playerBuilder(JSON.parse(data));
                 } //now it an object
             }
@@ -62,6 +66,7 @@ class logJSON {
     //writes new json to the file, also reread the new json
     writeJSON(file, data) {
         if (data){
+            module.exports.readJSON(file)
             console.log(data);
             var ID = data.getID();
             console.log(players);
@@ -69,6 +74,9 @@ class logJSON {
                 console.log(players);
                 players[ID] = data;
                 data = players;
+                console.log(players);
+                console.log('=====');
+                console.log(data);
             }
             else{
                 channels[ID] = data;
