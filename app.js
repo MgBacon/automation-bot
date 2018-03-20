@@ -53,6 +53,7 @@ client.on('message', msg => {
     }
 
     if(msg.content.indexOf('.addChar')>-1) {
+        console.log(log.getPlayer(msg));
         log.writeJSON(process.env.PATH_JSON_PLAYERS,log.getPlayer(msg))
     }
 

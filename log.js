@@ -7,9 +7,8 @@ var players = {};
 class logJSON {
 
     constructor() {
-        channels = {};
         //Checks if channel Json
-        if (fs.existsSync(process.env.PATH_JSON_CHANNELS)) this.readJSON(process.env.PATH_JSON_CHANNELS);
+        if (fs.existsSync(process.env.PATH_JSON_CHANNELS))this.readJSON(process.env.PATH_JSON_CHANNELS);
         else this.createJSON(process.env.PATH_JSON_CHANNELS);
 
         //Checks if player Json exists
@@ -45,7 +44,7 @@ class logJSON {
                 } //now it an object
                 else {
                     if(!data) players = {};
-                    else players = module.exports.playerBuilder(JSON.parse(data));
+                    else module.exports.playerBuilder(JSON.parse(data));
                 } //now it an object
             }
         });
@@ -65,6 +64,7 @@ class logJSON {
 
     //writes new json to the file, also reread the new json
     writeJSON(file, data) {
+        console.log(data);
         if (data){
             module.exports.readJSON(file);
             var ID = data.getID();
@@ -87,7 +87,10 @@ class logJSON {
     //Returns the wanted player object based on ID
     getPlayer(message) {
         module.exports.readJSON(process.env.PATH_JSON_CHANNELS);
-        if (players) {
+            for (var ID in players) {
+                if (ID === message.author.id) return players[ID];
+            }
+
             if (message.nickname === null){
                 var username = message.username;
                 var names = username.split("|").trim();
@@ -98,12 +101,6 @@ class logJSON {
             }
             return new PlayerClass.constructor({ID : message.author.id, Charname : names[1], Famname: names[0]});
         }
-        else {
-            for (var player in players) {
-                if (player.getDiscordID === discordID) return player1;
-            }
-        }
-    }
 }
 
 module.exports = new logJSON();
