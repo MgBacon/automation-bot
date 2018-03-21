@@ -22,12 +22,24 @@ client.on('message', msg => {
 
             }
 
+            var d = new Date();
+            console.log(d);
+
             console.log('a new notewar anouncement got detected, emojis added.');
             if(client.user.id !== msg.author.id){
-            msg.channel.send(" 1. Nodewar (Monday)");
-            msg.channel.send(" 2. Nodewar (Wednesday)");
-            msg.channel.send(" 3. Nodewar (Friday)" );
-            msg.channel.send(" Event");}
+
+                d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
+                msg.channel.send(" 1. Nodewar ("+ d.toDateString()+")");
+
+                d.setDate(d.getDate() + (3 + 7 - d.getDay()) % 7);
+                msg.channel.send(" 2. Nodewar ("+ d.toDateString()+")");
+
+                d.setDate(d.getDate() + (5 + 7 - d.getDay()) % 7);
+                msg.channel.send(" 3. Nodewar ("+ d.toDateString()+")" );
+
+                d.setDate(d.getDate() + (7 - d.getDay()) % 7);
+                msg.channel.send(" Event ("+ d.toDateString()+")");
+            }
         }
     }
     else {
