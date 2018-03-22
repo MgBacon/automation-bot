@@ -6,3 +6,4 @@ client_secret.json
 JsonLogs/
 Player.json
 Channel.json
+.DS_Store
