@@ -85,21 +85,26 @@ class logJSON {
     }
 
     //Returns the wanted player object based on ID
-    getPlayer(message) {
+    getPlayer(message, user) {
         module.exports.readJSON(process.env.PATH_JSON_CHANNELS);
-            for (var ID in players) {
-                if (ID === message.author.id) return players[ID];
-            }
 
-            if (message.nickname === null){
+            for (var ID in players) {
+                if (ID === user.id) return players[ID];
+            }
+            var nickname = message.channel.guild.member(message.author.id).nickname;
+
+            if (nickname === null){
                 var username = message.username;
                 var names = username.split("|").trim();
+                if (!names) message.send("Your name doesn't comply with the format please add a nickname or change your username");
             }
             else{
-                var nickname = message.channel.guild.member(message.author.id).nickname;
                 var names = nickname.split('|');
+                if (!names) message.send("Nickname not in the right format!");
             }
-            return new PlayerClass.constructor({ID : message.author.id, Charname : names[1], Famname: names[0]});
+            var player =  new PlayerClass.constructor({ID : message.author.id, Charname : names[1], Famname: names[0]});
+            module.exports.writeJSON(process.env.PATH_JSON_PLAYERS,player);
+            return player;
         }
 }
 

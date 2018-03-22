@@ -17,16 +17,11 @@ client.on('message', msg => {
 
         if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) {
 
-            if(client.user.id === msg.author.id){
-            msg.react('✅').then(text=>{msg.react('❎').then(text=>{msg.react('❓')})});
-
-            }
-
-            var d = new Date();
-            console.log(d);
+            if(client.user.id === msg.author.id)msg.react('✅').then(text=>{msg.react('❎').then(text=>{msg.react('❓')})});
 
             console.log('a new notewar anouncement got detected, emojis added.');
             if(client.user.id !== msg.author.id){
+                var d = new Date();
 
                 d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
                 msg.channel.send(" 1. Nodewar ("+ d.toDateString()+")");
@@ -76,35 +71,23 @@ client.on('message', msg => {
 
 client.on('messageReactionAdd',  (reaction, user) => {
     if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
-        var msg = reaction.message;
-        var member = reaction.message.guild.member(user);
-        var name = member.nickname;
-        if(name===null){
-            name = member.user.username;
-        }
-        if(name.split('|').length === 2){
-            var FamilyName = name.split('|')[0].trim();
-            console.log(FamilyName); // FamilyName with condition "Family name | Charname "
+        var player = log.getPlayer(reaction.message, user);
+
+            console.log(player.getFamName()); // FamilyName with condition <Family name | Charname>
             if(reaction.emoji.name ==='✅'){
                 console.log("Signup with yes");
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Yes",msg.content)})
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Yes",msg.content)})
             }
             else if(reaction.emoji.name === '❎'){
                 console.log("Signup with no");
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"No",msg.content)})
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"No",msg.content)})
             }
             else if(reaction.emoji.name === '❓'){
                 console.log("Signup with maybe");
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(FamilyName,"Maybe",msg.content)})
+                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Maybe",msg.content)})
             }
             console.log(reaction.emoji.name.toString())
-        }
-        else{
-            if(name === member.nickname) user.send("Nickname not in the right format!");
-            else user.send("Your name doesn't comply with the format please add a nickname or change your username");
-        }
-}
-
+    }
 });
 client.login(process.env.DISCORD_TOKEN);
 
