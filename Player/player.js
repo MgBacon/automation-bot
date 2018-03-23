@@ -40,11 +40,11 @@ Player.prototype.setFamName = function (value) {
 
 //Sets The SingupDay
 Player.prototype.getSignup = function (date) {
-    return this.data[date];
+    return this.data.date[date];
 };
 
 Player.prototype.setSingup = function (date, value) {
-    this.data[date] = value;
+    this.data.date[date] = value;
 };
 
 Player.prototype.sanitize = function (data) {

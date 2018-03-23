@@ -72,21 +72,26 @@ client.on('message', msg => {
 client.on('messageReactionAdd',  (reaction, user) => {
     if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
         var player = log.getPlayer(reaction.message, user);
+        var date = reaction.message.content.split('(')[1].split(')')[0];
 
             console.log(player.getFamName()); // FamilyName with condition <Family name | Charname>
             if(reaction.emoji.name ==='✅'){
                 console.log("Signup with yes");
+                player.setSingup(date,'yes');
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Yes",msg.content)})
             }
             else if(reaction.emoji.name === '❎'){
                 console.log("Signup with no");
+                player.setSingup(date,'no');
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"No",msg.content)})
             }
             else if(reaction.emoji.name === '❓'){
                 console.log("Signup with maybe");
+                player.setSingup(date,'maybe');
                 googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Maybe",msg.content)})
             }
             console.log(reaction.emoji.name.toString())
+        log.writeJSON(process.env.PATH_JSON_PLAYERS,player);
     }
 });
 client.login(process.env.DISCORD_TOKEN);

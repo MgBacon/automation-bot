@@ -3,7 +3,7 @@ var schemas = {
         ID: null,
         Charname: null,
         Famname: null,
-        date: []
+        date: {}
     }
 }
 
