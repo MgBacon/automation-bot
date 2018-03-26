@@ -90,6 +90,27 @@ class Authentication {
     console.log('Token stored to ' + TOKEN_PATH);
   }
 
+  async Activity() {
+        var sheets = google.sheets('v4');
+        sheets.spreadsheets.values.get({
+            auth: autheenthication,
+            spreadsheetId: sheeetId,
+            range: 'Sheet1!C1:C110',
+        }, function(err, response) {
+            if (err) {
+                console.log('The API returned an error: ' + err);
+                return;
+            }
+            var Matrix = response.values;
+            if (Matrix.length === 0) {
+                console.log('No data found.');
+            }
+            else{
+
+            }
+        });
+    }
+
   async Signup(FamilyName,value,msg_str){
     var sheets = google.sheets('v4');
     sheets.spreadsheets.values.get({
