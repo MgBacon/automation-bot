@@ -70,7 +70,6 @@ class logJSON {
             if (data.constructor.name === 'Player') {
                 players[ID] = data;
                 data = players;
-                console.log(players)
             }
             else{
                 channels[ID] = data;

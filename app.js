@@ -60,6 +60,10 @@ client.on('message', msg => {
         }
     }
 
+    if(msg.content.indexOf('.payout'>-1)) {
+       googleDoc.authenticate().then(text => {googleDoc.Activity()});
+    }
+
     if(msg.content.indexOf('.addChar')>-1) {
         console.log(log.getPlayer(msg));
         log.writeJSON(process.env.PATH_JSON_PLAYERS,log.getPlayer(msg))
@@ -74,7 +78,8 @@ client.on('messageReactionAdd',  (reaction, user) => {
     if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
         var player = log.getPlayer(reaction.message, user);
         var date = reaction.message.content.split('(')[1].split(')')[0];
-
+        date = date.split(')')[0];
+        var msg = reaction.message;
             console.log(player.getFamName()); // FamilyName with condition <Family name | Charname>
             if(reaction.emoji.name ==='✅'){
                 console.log("Signup with yes");

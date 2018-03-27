@@ -15,7 +15,6 @@ class Authentication {
   constructor() {
         this.sheetId=process.env.SHEET_ID;
         sheeetId = this.sheetId;
-        this.authenthication;
         autheenthication = this.authenthication;
   }
   authenticate(){
@@ -95,7 +94,7 @@ class Authentication {
         sheets.spreadsheets.values.get({
             auth: autheenthication,
             spreadsheetId: sheeetId,
-            range: 'Sheet1!C1:C110',
+            range: 'Activity!A3:B110',
         }, function(err, response) {
             if (err) {
                 console.log('The API returned an error: ' + err);
@@ -106,7 +105,7 @@ class Authentication {
                 console.log('No data found.');
             }
             else{
-
+                console.log(Matrix);
             }
         });
     }
@@ -136,7 +135,6 @@ class Authentication {
                     rownumber = i+1;
                     break;
                 }
-                console.log('%s', row[0]);
             }
             if(NameExists){
                 var sheets = google.sheets('v4');
