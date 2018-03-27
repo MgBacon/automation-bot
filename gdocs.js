@@ -105,6 +105,7 @@ class Authentication {
                 console.log('No data found.');
             }
             else{
+                var activity = {};
                 console.log(Matrix);
             }
         });

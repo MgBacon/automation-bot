@@ -93,15 +93,15 @@ class logJSON {
             var nickname = message.channel.guild.member(message.author.id).nickname;
 
             if (nickname === null){
-                var username = message.username;
-                var names = username.split("|").trim();
+                var username = user.username;
+                var names = username.split("|");
                 if (!names) message.send("Your name doesn't comply with the format please add a nickname or change your username");
             }
             else{
                 var names = nickname.split('|');
                 if (!names) message.send("Nickname not in the right format!");
             }
-            var player =  new PlayerClass.constructor({ID : message.author.id, Charname : names[1], Famname: names[0]});
+            var player =  new PlayerClass.constructor({ID : message.author.id, Charname : names[1].trim(), Famname: names[0].trim()});
             module.exports.writeJSON(process.env.PATH_JSON_PLAYERS,player);
             return player;
         }
