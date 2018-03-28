@@ -14,6 +14,8 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 
+    console.log(msg.content);
+
     if (msg.channel.id === idAnouncement) {
 
         if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) {
@@ -60,7 +62,8 @@ client.on('message', msg => {
         }
     }
 
-    if(msg.content.indexOf('.payout'>-1)) {
+    if(msg.content === ".payout") {
+        console.log('how often do you get called buddy boy?');
         googleDoc.authenticate().then(text => {googleDoc.tiers()}).then(googleDoc.authenticate().then(text => {googleDoc.Activity(msg.author, Discord)}));
     }
 
