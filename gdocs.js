@@ -11,6 +11,8 @@ const TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json'; /
 var sheeetId;
 var autheenthication;
 
+var tiers;
+
 class Authentication {
   constructor() {
         this.sheetId=process.env.SHEET_ID;
@@ -89,7 +91,13 @@ class Authentication {
     console.log('Token stored to ' + TOKEN_PATH);
   }
 
-  async Activity() {
+  async Activity(discordOwner, discord ) {
+      console.log('this function is called');
+      var date = new Date;
+      var embed = new discord.RichEmbed()
+          .setColor('#660066')
+          .setTimestamp()
+          .setTitle("Guild activity "+ date.toDateString());
         var sheets = google.sheets('v4');
         sheets.spreadsheets.values.get({
             auth: autheenthication,
@@ -105,8 +113,53 @@ class Authentication {
                 console.log('No data found.');
             }
             else{
-                var activity = {};
-                console.log(Matrix);
+                var tier = {};
+                console.log("I've been called");
+                //console.log(tiers);
+                Array.prototype.forEach.call(Matrix, player => {
+                    for (var i = 0; i < Object.keys(tiers).length; i++){
+                        if (player[1] < tiers[i-1] && player[1] > tiers[i]){
+                            //console.log(player[1]);
+                            //console.log(tiers[i]);
+                            tier = i;
+                        }
+                }
+                if(embed.fields.length >= 25){
+                    discordOwner.send({embed}).then(embed = new discord.RichEmbed()
+                        .setColor('#660066')
+                        .setTimestamp()
+                        .setTitle("Guild activity "+ date.toDateString()));
+
+                }
+                if (player[0]) embed.addField(player[0], "Guildpoints: "+player[1]+" | Tier: "+ tier);
+            });
+                discordOwner.send({embed});
+                //console.log(Matrix);
+            }
+        });
+    }
+
+    tiers() {
+        var sheets = google.sheets('v4');
+        sheets.spreadsheets.values.get({
+            auth: autheenthication,
+            spreadsheetId: sheeetId,
+            range: 'Activity!I3:J6',
+        }, function(err, response) {
+            if (err) {
+                console.log('The API returned an error: ' + err);
+                return;
+            }
+            var Matrix = response.values;
+            if (Matrix.length === 0) {
+                console.log('No data found.');
+            }
+            else{
+                 tiers = {};
+                Array.prototype.forEach.call(Matrix, tier => {
+                    tiers[tier[0]] = tier[1];
+            });
+                console.log('i am finished');
             }
         });
     }

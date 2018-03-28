@@ -61,7 +61,7 @@ client.on('message', msg => {
     }
 
     if(msg.content.indexOf('.payout'>-1)) {
-       googleDoc.authenticate().then(text => {googleDoc.Activity()});
+        googleDoc.authenticate().then(text => {googleDoc.tiers()}).then(googleDoc.authenticate().then(text => {googleDoc.Activity(msg.author, Discord)}));
     }
 
     if(msg.content.indexOf('.addChar')>-1) {
