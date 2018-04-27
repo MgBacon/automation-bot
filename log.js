@@ -16,23 +16,7 @@ class logJSON {
         else this.createJSON(process.env.PATH_JSON_PLAYERS);
     }
 
-    //Builds the player object and adds it to the players array
-    playerBuilder(arr) {
-        for (var i = 0, len = Object.values(arr).length; i < len; i++) {
-            var data = Object.values(arr)[i].data;
-            var player = new PlayerClass.constructor;
-
-            player.setID(data.ID.trim());
-            player.setCharName(data.Charname.trim());
-            player.setFamName(data.Famname.trim());
-
-            Array.prototype.forEach.call(data.date, date => {
-                player.setSingup(date.date, date.value);
-            });
-            players[player.getID()] = player;
-        }
-    }
-
+    /*JSON*/
     readJSON(file) {
         fs.readFile(file, 'utf8', function readFileCallback(err, data) {
             if (err) {
@@ -43,6 +27,7 @@ class logJSON {
                     else channels = JSON.parse(data);
                 } //now it an object
                 else {
+                    console.log()
                     if(!data) players = {};
                     else module.exports.playerBuilder(JSON.parse(data));
                 } //now it an object
@@ -65,6 +50,7 @@ class logJSON {
     //writes new json to the file, also reread the new json
     writeJSON(file, data) {
         if (data){
+            console.log(data);
             module.exports.readJSON(file);
             var ID = data.getID();
             if (data.constructor.name === 'Player') {
@@ -83,6 +69,7 @@ class logJSON {
         else {console.log('OEPS!')}
     }
 
+    /*Player*/
     //Returns the wanted player object based on ID
     getPlayer(message, user) {
         module.exports.readJSON(process.env.PATH_JSON_CHANNELS);
@@ -90,21 +77,47 @@ class logJSON {
             for (var ID in players) {
                 if (ID === user.id) return players[ID];
             }
-            var nickname = message.channel.guild.member(message.author.id).nickname;
+            var nickname = message.channel.guild.member(user.id).nickname;
+                if (nickname === null) {
+                    var username = user.username;
+                    var names = username.split("|");
+                    if (names.length !== 2) user.send("Your name doesn't comply with the format please add a nickname or change your username");
+                }
+                else {
+                    var names = nickname.split('|');
+                    if (names.length !== 2) user.send("Nickname not in the right format!");
+                }
 
-            if (nickname === null){
-                var username = user.username;
-                var names = username.split("|");
-                if (!names) message.send("Your name doesn't comply with the format please add a nickname or change your username");
-            }
-            else{
-                var names = nickname.split('|');
-                if (!names) message.send("Nickname not in the right format!");
-            }
-            var player =  new PlayerClass.constructor({ID : message.author.id, Charname : names[1].trim(), Famname: names[0].trim()});
-            module.exports.writeJSON(process.env.PATH_JSON_PLAYERS,player);
-            return player;
+                if(names.length === 2) {
+                    var player = new PlayerClass.constructor({
+                        ID: message.author.id,
+                        Charname: names[1].trim(),
+                        Famname: names[0].trim()
+                    });
+                    module.exports.writeJSON(process.env.PATH_JSON_PLAYERS, player);
+                    return player;
+                }
         }
+
+    //Builds the player object and adds it to the players array
+    playerBuilder(arr) {
+        for (var i = 0, len = Object.values(arr).length; i < len; i++) {
+            var data = Object.values(arr)[i].data;
+            var player = new PlayerClass.constructor;
+
+            player.setID(data.ID.trim());
+            player.setCharName(data.Charname.trim());
+            player.setFamName(data.Famname.trim());
+
+            Array.prototype.forEach.call(data.date, date => {
+                player.setSingup(date.date, date.value);
+        });
+            players[player.getID()] = player;
+        }
+    }
+
+    /*Channel*/
+
 }
 
 module.exports = new logJSON();

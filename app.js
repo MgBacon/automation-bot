@@ -14,8 +14,6 @@ client.on('ready', () => {
 
 client.on('message', msg => {
 
-    console.log(msg.content);
-
     if (msg.channel.id === idAnouncement) {
 
         if( (msg.content.indexOf('Nodewar')>-1 || msg.content.indexOf('Event')>-1) && client.user.id === msg.author.id || msg.content.toLowerCase().indexOf('nodewarsignup')>-1) {
@@ -63,8 +61,7 @@ client.on('message', msg => {
     }
 
     if(msg.content === ".payout") {
-        console.log('how often do you get called buddy boy?');
-        googleDoc.authenticate().then(text => {googleDoc.tiers()}).then(googleDoc.authenticate().then(text => {googleDoc.Activity(msg.author, Discord)}));
+        googleDoc.authenticate().then(text => {googleDoc.tiers(msg.author, Discord, msg.guild.iconURL)});
     }
 
     if(msg.content.indexOf('.addChar')>-1) {
@@ -78,8 +75,11 @@ client.on('message', msg => {
 });
 
 client.on('messageReactionAdd',  (reaction, user) => {
-    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id){
-        var player = log.getPlayer(reaction.message, user);
+    if(reaction.message.channel.id === idAnouncement && client.user.id !== user.id && reaction.message.author.id === client.user.id)
+{
+    var player = log.getPlayer(reaction.message, user);
+
+    if (player) {
         if (reaction.message.content === "Event") {
             date = 'event'
         }
@@ -88,25 +88,32 @@ client.on('messageReactionAdd',  (reaction, user) => {
             date = date.split(')')[0];
         }
         var msg = reaction.message;
-            console.log(player.getFamName()); // FamilyName with condition <Family name | Charname>
-            if(reaction.emoji.name ==='✅'){
-                console.log("Signup with yes");
-                player.setSingup(date,'yes');
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Yes",msg.content)})
-            }
-            else if(reaction.emoji.name === '❎'){
-                console.log("Signup with no");
-                player.setSingup(date,'no');
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"No",msg.content)})
-            }
-            else if(reaction.emoji.name === '❓'){
-                console.log("Signup with maybe");
-                player.setSingup(date,'maybe');
-                googleDoc.authenticate().then(text =>{googleDoc.Signup(player.getFamName(),"Maybe",msg.content)})
-            }
-            console.log(reaction.emoji.name.toString())
-        log.writeJSON(process.env.PATH_JSON_PLAYERS,player);
+        console.log(player.getFamName()); // FamilyName with condition <Family name | Charname>
+        if (reaction.emoji.name === '✅') {
+            console.log("Signup with yes");
+            player.setSingup(date, 'yes');
+            googleDoc.authenticate().then(text => {googleDoc.Signup(player.getFamName(), "Yes", msg.content)
+        });
+
+        }
+        else if (reaction.emoji.name === '❎') {
+            console.log("Signup with no");
+            player.setSingup(date, 'no');
+            googleDoc.authenticate().then(text => {googleDoc.Signup(player.getFamName(), "No", msg.content)
+        });
+
+        }
+        else if (reaction.emoji.name === '❓') {
+            console.log("Signup with maybe");
+            player.setSingup(date, 'maybe');
+            googleDoc.authenticate().then(text => {googleDoc.Signup(player.getFamName(), "Maybe", msg.content)
+        });
+        }
+        log.writeJSON(process.env.PATH_JSON_PLAYERS, player);
+
+        console.log(reaction.emoji.name.toString());
     }
+}
 });
 client.login(process.env.DISCORD_TOKEN);
 

@@ -11,7 +11,7 @@ const TOKEN_PATH = TOKEN_DIR + 'sheets.googleapis.com-nodejs-quickstart.json'; /
 var sheeetId;
 var autheenthication;
 
-var tiers;
+var tiers = [];
 
 class Authentication {
   constructor() {
@@ -91,13 +91,14 @@ class Authentication {
     console.log('Token stored to ' + TOKEN_PATH);
   }
 
-  async Activity(discordOwner, discord ) {
-      console.log('this function is called');
+  async Activity(discordOwner, discord, pictureURL) {
       var date = new Date;
       var embed = new discord.RichEmbed()
           .setColor('#660066')
           .setTimestamp()
+          .setThumbnail(pictureURL)
           .setTitle("Guild activity "+ date.toDateString());
+
         var sheets = google.sheets('v4');
         sheets.spreadsheets.values.get({
             auth: autheenthication,
@@ -113,15 +114,27 @@ class Authentication {
                 console.log('No data found.');
             }
             else{
-                var tier = {};
-                console.log("I've been called");
-                //console.log(tiers);
+                var tier = 1;
+                console.log(tiers);
+                console.log(Matrix);
                 Array.prototype.forEach.call(Matrix, player => {
-                    for (var i = 0; i < Object.keys(tiers).length; i++){
-                        if (player[1] < tiers[i-1] && player[1] > tiers[i]){
-                            //console.log(player[1]);
-                            //console.log(tiers[i]);
+                    for (var tiercount in tiers){
+                        console.log('test');
+                        if (player[1] < tiercount && player[1] > tiercount){
+                            console.log("I got it!");
                             tier = i;
+                        }
+                        else if (tiercount =1 ){
+                            i++;
+                            console.log("I am tier 1 feelsBadMan");
+                            console.log(i);
+                            console.log(Object.keys(tiers).length);
+                            console.log(player[0]);
+                            tier = 1;
+                        }
+                        else if (tiercount = 4){
+                            console.log("I am tier 4 payout!");
+                            tier = 4;
                         }
                 }
                 if(embed.fields.length >= 25){
@@ -134,12 +147,11 @@ class Authentication {
                 if (player[0]) embed.addField(player[0], "Guildpoints: "+player[1]+" | Tier: "+ tier);
             });
                 discordOwner.send({embed});
-                //console.log(Matrix);
             }
         });
     }
 
-    tiers() {
+    tiers(author, discord, iconURL) {
         var sheets = google.sheets('v4');
         sheets.spreadsheets.values.get({
             auth: autheenthication,
@@ -159,7 +171,8 @@ class Authentication {
                 Array.prototype.forEach.call(Matrix, tier => {
                     tiers[tier[0]] = tier[1];
             });
-                console.log('i am finished');
+                console.log("I'm finished!")
+                module.exports.authenticate().then(text => {module.exports.Activity(author, discord, iconURL)})
             }
         });
     }
